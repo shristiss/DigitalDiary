@@ -1,15 +1,10 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import useStyles from "./styles.js";
-import {useDispatch} from 'react-redux'
-import { createPost } from "../../actions/posts.js";
-function Form() {
-  
-  const classes = useStyles();
-  const dispatch = useDispatch();
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, updatePost } from "../../actions/posts.js";
+function Form({ currentId, setCurrentId }) {
   const [postData, setPostData] = useState({
     creator: "",
     title: "",
@@ -17,11 +12,34 @@ function Form() {
     tags: "",
     selectedFile: "",
   });
+  const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const updatedPostData = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
+console.log(updatedPostData)
+  useEffect(() => {
+    if (updatedPostData) setPostData(updatedPostData);
+  }, [updatedPostData]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData))
+    if (currentId!==0) {
+      console.log("current id present");
+      dispatch(updatePost(currentId, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
   };
-  const clear = () =>{}
+  const clear = () => {
+    setCurrentId(null);
+    setPostData({creator: "",
+    title: "",
+    message: "",
+    tags: "",
+    selectedFile: "",})
+  };
   return (
     <Paper className={classes.paper}>
       <form
@@ -30,7 +48,9 @@ function Form() {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Creating a memory</Typography>
+        <Typography variant="h6">
+          {currentId ? "Editing" : "Creating"} a memory
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
@@ -76,8 +96,25 @@ function Form() {
             }
           />
         </div>
-        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>Submit</Button>
-        <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>Clear</Button>
+        <Button
+          className={classes.buttonSubmit}
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+          fullWidth
+        >
+          Submit
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="small"
+          onClick={clear}
+          fullWidth
+        >
+          Clear
+        </Button>
       </form>
     </Paper>
   );
