@@ -43,10 +43,17 @@ export default makeStyles({
   },
   title: {
     padding: '0 16px',
+    textDecorationLine : 'underline',
+   fontWeight :'bold'
+
   },
   cardActions: {
     padding: '0 16px 8px 16px',
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  cardAction: {
+    display: 'block',
+    textAlign: 'initial',
   },
 });
