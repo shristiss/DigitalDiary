@@ -1,48 +1,21 @@
 import { React, useEffect, useState } from "react";
-import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { getPosts } from "./actions/posts.js";
-import memories from "./images/memories.png";
-import Form from "./components/Form/Form.js";
-import Posts from "./components/Posts/Posts.js";
-import useStyles from "./styles.js";
-import { ThunkAction } from "redux-thunk";
-function App() {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const [currentId, setCurrentId] = useState(0);
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
-  return (
-    <Container maxWidth="lg">
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography className={classes.heading} variant="h2" align="center">
-          Memories
-        </Typography>
-        <img className={classes.image} src={memories} alt="icon" height="60" />
-      </AppBar>
-      <Grow in>
-        <Container>
-          <Grid
-          className={classes.mainContainer}
-            container
-            justifyContent="space-between"
-            alignItems="stretch"
-            spacing={3}
-          >
-            <Grid item xs={12} sm={8}>
-              <Posts setCurrentId={setCurrentId} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Form currentId={currentId} setCurrentId={setCurrentId} />
-            </Grid>
-          </Grid>
-        </Container>
-      </Grow>
+import { Container } from "@material-ui/core";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./components/Home/Home.js";
+import Navbar from "./components/Navbar/Navbar.js";
+import Auth from "./components/Auth/Auth.js";
+const App = () => ( 
+ 
+   <BrowserRouter>
+     <Container maxWidth="lg">
+      <Navbar />
+      <Routes>
+        <Route path="/"  Component={Home}/>
+        <Route path="/auth"  Component={Auth}/>
+      </Routes>
     </Container>
-  );
-}
+   </BrowserRouter>
+  
+)
 
 export default App;
