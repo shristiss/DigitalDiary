@@ -1,9 +1,9 @@
 //handlers for routes
-import  Post  from "../models/postMessage.models.js";
+import  PostMessage  from "../models/postMessage.models.js";
 import mongoose from 'mongoose'
 export const getPost = async (req, res) => {
   try {
-    const postMessages = await Post.find();
+    const postMessages = await PostMessage.find();
     res.status(200).json(postMessages);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -11,10 +11,10 @@ export const getPost = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  const { title, message, selectedFile, creator, tags } = req.body;
- 
-    const newPostMessage = new Post({ title, message, selectedFile, creator, tags })
-console.log(newPostMessage)
+  const post = req.body;
+ console.log(post)
+    const newPostMessage = new PostMessage ({...post, creater:req.userId , createdAt : new Date().toISOString()})
+
     try {
         await newPostMessage.save();
 
@@ -32,7 +32,7 @@ export const updatePost = async (req, res) => {
 
   const updatedPost = { creator, title, message, tags, selectedFile, _id: id };
 
-  await Post.findByIdAndUpdate(id, updatedPost, { new: true });
+  await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
 
   res.json(updatedPost);
 }
@@ -41,18 +41,31 @@ export const deletePost = async (req,res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-  await Post.findByIdAndDelete(id);
+  await PostMessage.findByIdAndDelete(id);
 
   res.json({message : 'post deleted!'})
 
 }
 
-export const likePost = async (req,res) =>{
-  const { id } = req.params;
+export const likePost = async (req, res) => {
+  const { id } = req.params
+  ;
+  if (!id) {
+      return res.json({ message: "Unauthenticated" });
+    }
+
   if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
-
-  const post = await Post.findById(id)
-  const updatedPost = await Post.findByIdAndUpdate(id, {likeCount:post.likeCount +1 }, {new :true})
-
-  res.json(updatedPost)
+  
+  const post = await PostMessage.findById(id);
+  const index = post.likes.findIndex((id) => id === String(id));
+  console.log("index = ",index)
+  if (index === -1) {
+    post.likes.push(id);
+  } else {
+    post.likes = post.likes.filter((id) => id !== String(id));
+  }
+  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
+  res.status(200).json(updatedPost);
 }
+
+

@@ -1,21 +1,24 @@
 import * as api from "../api";
 
-
-export const signin = (formData, history) => async(dispatch)  =>{
-try {
+export const signIn = (formData, navigate) => async (dispatch) => {
+  try {
     //login user
+    const { data } =await  api.signIn(formData);
+    dispatch({ type: 'AUTH', data });
+    navigate('/');
+  } catch (error) { 
+    console.log(error.response.data);
+  }
+};
 
-    history.push('/')
-} catch (error) {
-    console.log(error)
-}
-}
-
-export const signup = () => async (dispatch) => {
-    try {
-        // sign up user
-        history.push('/')
-    } catch (error) {
-        console.log(error)   
-    }
-}
+export const signUp = (formData, navigate) => async (dispatch) => {
+  try {
+    // sign up user
+    const { data } = await  api.signUp(formData);
+    console.log(data)
+    dispatch({ type: 'AUTH', data });
+    navigate('/');
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};

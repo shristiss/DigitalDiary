@@ -3,7 +3,8 @@ import { gapi } from "gapi-script";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {signin, signup} from '../../actions/auth'
+import {signIn, signUp} from '../../actions/auth'
+
 import icon from "./icon";
 import {
   Avatar,
@@ -20,6 +21,7 @@ import Input from "./Input";
 
 const Auth = () => {
   const classes = useStyles();
+ 
   const [isSignup, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,9 +38,9 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if(isSignup){
-dispatch(signup(formData, history))
+dispatch(signUp(formData, navigate))
     }else{
-      dispatch(signin(formData, history))
+      dispatch(signIn(formData, navigate))
     }
   };
   const handleChange = (e) => {

@@ -1,27 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import useStyles from "./styles";
+
+import { jwtDecode } from 'jwt-decode';
+
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import memories from "./../../images/memories.png";
 import { Link } from "react-router-dom";
 function Navbar() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   console.log(user);
-  useEffect(() => {
-    const token = user?.token;
-    setUser(JSON.parse(localStorage.getItem("profile")));
-  }, [location]);
+
 
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     navigate("/auth");
     setUser(null);
   };
-
+  useEffect(() => {
+    const token = user?.token;
+    if(token){
+      const decodedToken = jwtDecode(token);
+      if(decodedToken.exp *1000 < new Date().getTime())logout();
+        }
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
   const classes = useStyles();
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
@@ -39,15 +47,15 @@ function Navbar() {
         <Toolbar className={classes.toolbar}>
           {user ? (
             <div className={classes.profile}>
-              <Avatar
+              {/* <Avatar
                 className={classes.purple}
                 alt={user.result.givenName}
                 src={user.result.imageUrl}
               >
                 {user.result.givenName}
-              </Avatar>
+              </Avatar> */}
               <Typography className={classes.userName} variant="h6">
-                {user.result.name}{" "}
+                {user?.result?.name}{" "}
               </Typography>
               <Button
                 className={classes.logout}

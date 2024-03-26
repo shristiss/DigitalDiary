@@ -5,6 +5,7 @@ import User from "../models/user.models.js";
 
 export const signin = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email);
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
@@ -31,7 +32,7 @@ export const signin = async (req, res) => {
 
 export const signup = async (req, res) => {
     const {firstName, lastName, email, password, confirmPassword} = req.body
-
+     console.log(req.body)
     try {
         const existingUser =  await User.findOne({email})
         if(existingUser){
@@ -51,3 +52,4 @@ export const signup = async (req, res) => {
         res.status(500).json({message: "Something went wrong"})
     }
 };
+
