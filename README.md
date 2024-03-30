@@ -5,7 +5,26 @@ A platform to create memories digitally!
 DigitalDiary allows users to create posts which also includes brief description, tags and a picture. USers can see other users posts and can like and comment on others posts seamlessly.
 DigitalDiary also let users to search posts through tags and title. It provides authentication through both Google authentication and manual authentication. Google authentication offers a convenient and secure way to sign in using Google accounts, while manual authentication allows users to create accounts directly on our platform. 
 
+It includes various features such as Authentication, Pagination, dealing with real time database, adding comments, real time searching and many moree..
+
+## **Technologies Used**
+**FrontEnd Side**
+- Javascript,HTML,CSS
+- ReactJs
+- React-redux
+- materialui
+- Google Auth
+
+**BackEnd Side**
+- Javascript
+- Nodejs
+- Expressjs
+- Mongodb | Mongoose
+- JSON Web Tokens
+
+
 ### Screenshots
+<img width="500" height="300" alt="Screenshot 2024-03-30 232444" src="https://github.com/shristiss/DigitalDiary/assets/85256662/8a73e06f-ad00-421a-9414-b6aa350ed70f">
 
 <img  width="500" height="300" alt="Screenshot 2024-03-30 232553" src="https://github.com/shristiss/Socio-MERN/assets/85256662/e60e3874-4f28-4203-bd42-6c8aebc6a72a">
 
