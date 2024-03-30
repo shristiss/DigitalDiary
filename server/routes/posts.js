@@ -14,6 +14,6 @@ router.route('/',auth).post(createPost)
 //router.route('/:id).patch(updatePost)
 router.patch('/:id',auth, updatePost);
 router.route('/:id',auth).delete(deletePost)
-router.route('/:id/likePost',auth).patch(likePost)
+router.patch('/:id/likePost', auth, likePost);
 router.route('/:id/commentPost',auth).post(commentPost)
 export default router

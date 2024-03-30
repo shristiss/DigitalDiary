@@ -93,7 +93,8 @@ export const deletePost = async (req, res) => {
 
 export const likePost = async (req, res) => {
   const { id } = req.params;
-  if (!id) {
+ console.log("imhere")
+  if (!req.userId) {
     return res.json({ message: "Unauthenticated" });
   }
 
@@ -101,17 +102,33 @@ export const likePost = async (req, res) => {
     return res.status(404).send(`No post with id: ${id}`);
 
   const post = await PostMessage.findById(id);
-  const index = post.likes.findIndex((id) => id === String(id));
-  console.log("index = ", index);
-  if (index === -1) {
-    post.likes.push(id);
-  } else {
-    post.likes = post.likes.filter((id) => id !== String(id));
+  if(!post){
+    return res.status(404).json({message: 'Post not found'})
   }
-  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
-    new: true,
-  });
-  res.status(200).json(updatedPost);
+
+const alreadyLiked = post.likes.includes(req.userId)
+if (!alreadyLiked) {
+  // If the user hasn't liked the post, add the user to the likes array
+  await PostMessage.findByIdAndUpdate(id, { $addToSet: { likes: req.userId } });
+} else {
+  // If the user has already liked the post, remove the user from the likes array
+  await PostMessage.findByIdAndUpdate(id, { $pull: { likes: req.userId } });
+}
+const updatedPost = await PostMessage.findById(id)
+res.status(200).json(updatedPost)
+  // const index = post.likes.findIndex((id) => id === String(req.userId));
+
+  // if (index === -1) {
+  //   post.likes.push(req.userId);
+  // } else {
+  //   post.likes = post.likes.filter((id) => id !== String(req.userId));
+  // }
+
+  // const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+  //   new: true,
+  // });
+
+  // res.status(200).json(updatedPost);
 };
 
 export const commentPost = async (req, res) => {
@@ -126,5 +143,5 @@ export const commentPost = async (req, res) => {
     new: true,
   });
 
-  res.json(updatedPost)
+  res.json(updatedPost);
 };
