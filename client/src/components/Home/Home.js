@@ -23,39 +23,40 @@ function useQuery() {
 }
 
 function Home() {
+  const [currentId, setCurrentId] = useState(0);
+  const [search, setSearch] = useState('');
+  const [tags, setTags] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
   const query = useQuery();
   const navigate = useNavigate();
+  const page = query.get('page') || 1;
+  const searchQuery = query.get('searchQuery');
 
-  const page = query.get("page") || 1;
-  const searchQuery = query.get("searchQuery");
-
-  const [currentId, setCurrentId] = useState(0);
-  const [search, setSearch] = useState("");
-  const [tags, setTags] = useState([]);
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [currentId, dispatch]);
-
+useEffect(()=>{dispatch(getPosts())},[currentId,dispatch])
+ 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
       //search post code  13means enter
       searchPost();
     }
   };
-  const handleAddChip = (tag) => setTags([...tags, tag]);
-
-  const handleDeleteChip = (chipToDelete) =>
-    setTags(tags.filter((tag) => tag !== chipToDelete));
+  const handleAddChip = (chip) => {
+    const updatedTags = [...tags, chip];
+    setTags(updatedTags);
+  };
+  
+  const handleDeleteChip = (chipToDelete) => {
+    const updatedTags = tags.filter((tag) => tag !== chipToDelete);
+    setTags(updatedTags);
+  };
 
   const searchPost = () => {
     if (search.trim() || tags) {
-      dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
+      dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
       //dispatch->fetch search post
       navigate(
-        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
+        `/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`
       );
     } else {
       navigate("/");
@@ -70,7 +71,7 @@ function Home() {
           justifyContent="space-between"
           alignItems="stretch"
           spacing={3}
-          className={classes.GridContainer}
+          className={classes.gridContainer}
         >
           <Grid item xs={12} sm={6} md={9}>
             <Posts setCurrentId={setCurrentId} />
@@ -110,9 +111,12 @@ function Home() {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper elevation={6}>
-              <Paginate />
+            {(!searchQuery && !tags.length) && (
+              <Paper elevation={6} className={classes.pagination} >
+              <Paginate page={page} />
             </Paper>
+            )}
+           
           </Grid>
         </Grid>
       </Container>

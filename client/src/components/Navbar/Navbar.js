@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import useStyles from "./styles";
-
+import './index.css'
 import { jwtDecode } from 'jwt-decode';
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import memoriesLogo from "./../../images/memoriesLogo.png";
-import memoriesText from "./../../images/memoriesText.png"
+import dd from  "./../../images/dd.png";
+import memoriesLogo from "./../../images/memoriesLogo.png"
 import { Link } from "react-router-dom";
 function Navbar() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
@@ -35,19 +35,19 @@ function Navbar() {
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
       <Link to='/' className={classes.brandContainer}>
-       <img src={memoriesText} alt="Memories Text" height="45px" />
+      <img component={Link} to="/" src={dd} alt="icon" height="55px" width="200px" />
         <img className={classes.image} src={memoriesLogo} alt="icon" height="40px" />
         </Link>
         <Toolbar className={classes.toolbar}>
           {user ? (
             <div className={classes.profile}>
-              {/* <Avatar
+              <Avatar
                 className={classes.purple}
                 alt={user.result.givenName}
                 src={user.result.imageUrl}
               >
                 {user.result.givenName}
-              </Avatar> */}
+              </Avatar>
               <Typography className={classes.userName} variant="h6">
                 {user?.result?.name}{" "}
               </Typography>

@@ -3,6 +3,7 @@ import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import useStyles from "./styles.js";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { createPost, updatePost } from "../../actions/posts.js";
 import ChipInput from "material-ui-chip-input";
 function Form({ currentId, setCurrentId }) {
@@ -15,9 +16,9 @@ function Form({ currentId, setCurrentId }) {
   });
   const classes = useStyles();
   const dispatch = useDispatch();
-
+const navigate = useNavigate()
   const updatedPostData = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
   console.log(updatedPostData);
   useEffect(() => {
@@ -26,13 +27,15 @@ function Form({ currentId, setCurrentId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(postData);
     if (currentId !== 0) {
       console.log("current id present");
       dispatch(
         updatePost(currentId, { ...postData, name: user?.result?.name })
       );
+     
     } else {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+      dispatch(createPost({ ...postData, name: user?.result?.name }, navigate));
     }
     clear();
   };
@@ -56,11 +59,17 @@ function Form({ currentId, setCurrentId }) {
   };
   
   const handleAddChip = (tag) => {
-    setPostData({ ...postData, tags: [...postData.tags, tag] });
+    setPostData((prevData) => ({
+      ...prevData,
+      tags: [...prevData.tags, tag],
+    }));
   };
-
+  
   const handleDeleteChip = (chipToDelete) => {
-    setPostData({ ...postData, tags: postData.tags.filter((tag) => tag !== chipToDelete) });
+    setPostData((prevData) => ({
+      ...prevData,
+      tags: prevData.tags.filter((tag) => tag !== chipToDelete),
+    }));
   };
 
   return (
