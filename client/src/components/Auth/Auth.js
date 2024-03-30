@@ -3,7 +3,7 @@ import { gapi } from "gapi-script";
 import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {signIn, signUp} from '../../actions/auth'
+import { signIn, signUp } from "../../actions/auth";
 
 import icon from "./icon";
 import {
@@ -21,7 +21,7 @@ import Input from "./Input";
 
 const Auth = () => {
   const classes = useStyles();
- 
+
   const [isSignup, setIsSignUp] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,21 +37,21 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(isSignup){
-dispatch(signUp(formData, navigate))
-    }else{
-      dispatch(signIn(formData, navigate))
+    if (isSignup) {
+      dispatch(signUp(formData, navigate));
+    } else {
+      dispatch(signIn(formData, navigate));
     }
   };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleShowPassword = () =>
-    setShowPassword((prevShowPassword) => !prevShowPassword);
+  const handleShowPassword = () => setShowPassword(!showPassword);
   const switchMode = () => {
-    setIsSignUp((prevState) => !prevState);
-    handleShowPassword(false);
+    setFormData(initialState);
+    setIsSignUp((prevIsSignup) => !prevIsSignup);
+    setShowPassword(false);
   };
 
   const googleSuccess = async (res) => {
@@ -134,7 +134,7 @@ dispatch(signUp(formData, navigate))
             color="primary"
             className={classes.submit}
           >
-            {isSignup ? "Sign up" : "Sign in"}
+            {isSignup ? <strong>Sign up</strong> : <strong>Sign in</strong>}
           </Button>
           <GoogleLogin
             clientId="543257735253-rn3qi9l3tbj2mbm0bo47519v63pnihvc.apps.googleusercontent.com"
@@ -158,9 +158,11 @@ dispatch(signUp(formData, navigate))
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
-                {isSignup
-                  ? "Already have an account? Sign In"
-                  : "Dont have an account? Sign up!"}
+                {isSignup ? (
+                  <strong>Already have an account? Sign In</strong>
+                ) : (
+                  <strong>Dont have an account? Sign up!</strong>
+                )}
               </Button>
             </Grid>
           </Grid>

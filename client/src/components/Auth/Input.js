@@ -15,7 +15,7 @@ function Input({name,label,handleChange, autoFocus, handleShowPassword, type, ha
     placeholder={label}
     autoFocus={autoFocus}
     typpe={type}
-    InputProps={name === 'password' ? {
+    InputProps={name ===  "password" ? {
         endAdornment : (
             <InputAdornment position="end">
                 <IconButton onClick={handleShowPassword} >
